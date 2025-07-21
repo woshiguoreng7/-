@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绒棉WORLD | 多平台Minecraft服务器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        :root {
+            /* 默认主题 - 微软蓝 */
+            --primary: #0078D7;
+            --secondary: #106EBE;
+            --accent: #9BF00B;
+            --bg-primary: #f5f5f7;
+            --text-primary: #1d1d1f;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(0, 0, 0, 0.05);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --qq-color: #12B7F5;
+            --bili-color: #00A1D6;
+            --netease-color: #e53238;
+        }
+        
+        /* 绿色主题 */
+        .theme-green {
+            --primary: #107C10;
+            --secondary: #0C5C0C;
+            --accent: #BAD80A;
+            --bg-primary: #f0f9f0;
+        }
+        
+        /* 紫色主题 */
+        .theme-purple {
+            --primary: #5C2D91;
+            --secondary: #4B1E7F;
+            --accent: #C79AFF;
+            --bg-primary: #f7f2fa;
+        }
+        
+        /* 橙色主题 */
+        .theme-orange {
+            --primary: #CA5010;
+            --secondary: #A53C0C;
+            --accent: #FFB900;
+            --bg-primary: #fef6f1;
+        }
+        
+        /* 深色模式 */
+        .dark-theme {
+            --bg-primary: #121212;
+            --text-primary: #f5f5f7;
+            --card-bg: rgba(30, 30, 30, 0.85);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: var(--transition);
+            overflow-x: hidden;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(var(--primary-rgb), 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(var(--accent-rgb), 0.05) 0%, transparent 25%);
+        }
+        
+        /* 设置RGB值用于渐变 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(var(--primary-rgb), 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(var(--accent-rgb), 0.05) 0%, transparent 25%);
+            z-index: -1;
+        }
+        
+        /* 微软Fluent Design元素 */
+        .fluent-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fluent-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fluent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        
+        .fluent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .fluent-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fluent-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            transition: var(--transition);
+        }
+        
+        .fluent-btn:hover::after {
+            transform: translateX(100%) rotate(30deg);
+        }
+        
+        .fluent-btn:hover {
+            box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.3);
+        }
+        
+        /* 苹果设计元素 */
+        .apple-glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .apple-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .apple-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .apple-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon i {
+            color: white;
+            font-size: 24px;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .theme-selector {
+            position: relative;
+        }
+        
+        .theme-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .theme-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .theme-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            width: 150px;
+            opacity: 0;
+            transform: translateY(10px);
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 100;
+        }
+        
+        .theme-dropdown.active {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+        
+        .theme-option {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .theme-option:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+        
+        .dark-theme .theme-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .theme-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .theme-default .theme-color {
+            background: linear-gradient(135deg, #0078D7, #9BF00B);
+        }
+        
+        .theme-green .theme-color {
+            background: linear-gradient(135deg, #107C10, #BAD80A);
+        }
+        
+        .theme-purple .theme-color {
+            background: linear-gradient(135deg, #5C2D91, #C79AFF);
+        }
+        
+        .theme-orange .theme-color {
+            background: linear-gradient(135deg, #CA5010, #FFB900);
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .social-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--qq-color);
+            margin-top: 8px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
+            opacity: 0.7;
+            font-size: 16px;
+        }
+        
+        .dark-theme .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
+        }
+        
+        /* 动画 */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(52, 199, 89, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 199, 89, 0);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .servers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .server-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .server-actions {
+                flex-direction: column;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航栏 -->
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <div class="logo-text">绒棉WORLD</div>
+            </div>
+            <div class="nav-controls">
+                <div class="social-buttons">
+                    <button class="social-btn qq-btn" title="QQ群聊">
+                        <i class="fab fa-qq"></i>
+                    </button>
+                    <button class="social-btn bili-btn" title="Bilibili">
+                        <i class="fab fa-bilibili"></i>
+                    </button>
+                </div>
+                
+                <div class="theme-selector">
+                    <button class="theme-btn" id="themeBtn">
+                        <i class="fas fa-palette"></i>
+                        <span>主题</span>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option theme-default" data-theme="default">
+                            <div class="theme-color"></div>
+                            <span>微软蓝</span>
+                        </div>
+                        <div class="theme-option theme-green" data-theme="theme-green">
+                            <div class="theme-color"></div>
+                            <span>自然绿</span>
+                        </div>
+                        <div class="theme-option theme-purple" data-theme="theme-purple">
+                            <div class="theme-color"></div>
+                            <span>梦幻紫</span>
+                        </div>
+                        <div class="theme-option theme-orange" data-theme="theme-orange">
+                            <div class="theme-color"></div>
+                            <span>活力橙</span>
+                        </div>
+                        <div class="theme-option" id="darkModeToggle">
+                            <i class="fas fa-moon"></i>
+                            <span>深色模式</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- 主标题区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title" id="mainTitle">什么！你是Furry控？！那加入我们吧！</h1>
+                <p class="hero-subtitle" id="mainSubtitle">体验纯净Minecraft生存服务器(即使有更好的)</p>
+                <button class="fluent-btn hero-btn">立即加入游戏</button>
+            </div>
+        </section>
+        
+        <!-- 服务器区域 -->
+        <section class="servers-section">
+            <h2 class="section-title" id="serversTitle">我们的服务器</h2>
+            <div class="servers-grid">
+                <!-- Java版服务器 -->
+                <div class="fluent-card server-card" id="javaServer">
+                    <div class="server-header">
+                        <div class="server-icon java-icon">
+                            <i class="fab fa-java"></i>
+                        </div>
+                        <div class="server-info">
+                            <h3>Java版服务器</h3>
+                            <p>支持PC/Mac/Linux玩家</p>
+                        </div>
+                    </div>
+                    
+                    <div class="server-status">
+                        <div class="status-indicator"></div>
+                        <div class="status-text">服务器在线</div>
+                        <div class="player-count">在线玩家: <strong>0</strong>/50</div>
+                    </div>
+                    
+                    <div class="server-details">
+                        <div class="detail-card">
+                            <h4><i class="fas fa-server"></i> 服务器地址</h4>
+                            <p>mc.rongmian.world</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-microchip"></i> 服务器配置</h4>
+                            <p>Intel Xeon 16核 | 32GB内存 | SSD存储</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-globe"></i> 节点位置</h4>
+                            <p>洛杉矶,中国上海</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-plug"></i> 支持版本</h4>
+                            <p>Java 1.16 - 1.20</p>
+                        </div>
+                    </div>
+                    
+                    <div class="server-actions">
+                        <button class="fluent-btn" id="copyJavaBtn">复制地址</button>
+                        <button class="fluent-btn" style="background: transparent; border: 2px solid var(--primary);">查看地图</button>
+                    </div>
+                </div>
+                
+                <!-- 网易基岩版服务器 -->
+                <div class="fluent-card server-card" id="neteaseServer">
+                    <div class="server-header">
+                        <div class="server-icon netease-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="server-info">
+                            <h3>网易基岩版服务器</h3>
+                            <p>支持手机/平板/玩家</p>
+                        </div>
+                    </div>
+                    
+                    <div class="server-status">
+                        <div class="status-indicator"></div>
+                        <div class="status-text">服务器在线</div>
+                        <div class="player-count">在线玩家: <strong>0</strong>/20</div>
+                    </div>
+                    
+                    <div class="server-details">
+                        <div class="detail-card">
+                            <h4><i class="fas fa-search"></i> 搜索方式</h4>
+                            <p>在网易基岩版租赁服搜索服务器号</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-microchip"></i> 服务器配置</h4>
+                            <p>网易神人级配置,体验红温感觉</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-id-card"></i> 服务器号</h4>
+                            <p>加群获取</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-plug"></i> 支持版本</h4>
+                            <p>网易基岩版</p>
+                        </div>
+                    </div>
+                    
+                    <div class="server-actions">
+                        <button class="fluent-btn" id="openNeteaseBtn">打开网易我的世界</button>
+                        <button class="fluent-btn" style="background: transparent; border: 2px solid var(--netease-color);">扫码加入</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特色功能区域 -->
+        <section class="features-section">
+            <h2 class="section-title" id="featuresTitle">特色功能</h2>
+            <div class="features-grid">
+                <div class="apple-card feature-card" id="feature1">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 class="feature-title">跨平台同步</h3>
+                    <p class="feature-desc">孩子，这不可能做到</p>
+                </div>
+                
+                <div class="apple-card feature-card" id="feature2">
+                    <div class="feature-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h3 class="feature-title">生存体验！</h3>
+                    <p class="feature-desc">沉浸式毛茸茸生存体验！(禁止涉黄...才怪)</p>
+                </div>
+                
+                <div class="apple-card feature-card" id="feature3">
+                    <div class="feature-icon">
+                        <i class="fas fa-dragon"></i>
+                    </div>
+                    <h3 class="feature-title">加入我们！</h3>
+                    <p class="feature-desc">体验屎屎级生存体验</p>
+                </div>
+                
+                <div class="apple-card feature-card" id="feature4">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">反作弊系统</h3>
+                    <p class="feature-desc">神秘管理员(腐竹太抽象了)</p>
+                </div>
+                
+                <div class="apple-card feature-card" id="feature5">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">Furry服务器！</h3>
+                    <p class="feature-desc">腐竹是福瑞控(雾)</p>
+                </div>
+                
+                <div class="apple-card feature-card" id="feature6">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3 class="feature-title">云存档</h3>
+                    <p class="feature-desc">服务器实时保存玩家数据</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 社区区域 -->
+        <section class="community-section">
+            <h2 class="section-title" id="communityTitle">加入我们的社区</h2>
+            <div class="social-links">
+                <a href="https://jq.qq.com/?_wv=1027&k=5KG6wzK" class="social-link" target="_blank" id="qqLink">
+                    <div class="social-icon qq-icon">
+                        <i class="fab fa-qq"></i>
+                    </div>
+                    <div class="social-name">QQ群</div>
+                    <div class="social-desc">与玩家实时交流</div>
+                    <div class="qq-group-id">207555881</div>
+                </a>
+                
+                <a href="https://b23.tv/bQi9mWt" class="social-link" target="_blank" id="biliLink">
+                    <div class="social-icon bili-icon">
+                        <i class="fab fa-bilibili"></i>
+                    </div>
+                    <div class="social-name">Bilibili</div>
+                    <div class="social-desc">神秘宣传片</div>
+                </a>
+                
+                <a href="#" class="social-link" id="neteaseLink">
+                    <div class="social-icon netease-icon-sm">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="social-name">网易社区</div>
+                    <div class="social-desc">基岩版玩家论坛</div>
+                </a>
+            </div>
+        </section>
+        
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>© 2023 绒棉WORLD Minecraft服务器 版权所有</p>
+            <p>Java版地址: mc.rongmian.world | 网易基岩版: 搜索服务器号</p>
+            <p>打造专属于小动物的游戏体验</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.documentElement.style.setProperty('--primary-rgb', '0, 120, 215');
+        document.documentElement.style.setProperty('--accent-rgb', '155, 240, 11');
+        
+        const themeBtn = document.getElementById('themeBtn');
+        const themeDropdown = document.getElementById('themeDropdown');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        
+        themeBtn.addEventListener('click', () => {
+            themeDropdown.classList.toggle('active');
+        });
+        
+        document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.getAttribute('data-theme');
+                body.className = theme;
+                
+                if(theme === 'theme-green') {
+                    document.documentElement.style.setProperty('--primary-rgb', '16, 124, 16');
+                    document.documentElement.style.setProperty('--accent-rgb', '186, 216, 10');
+                } else if(theme === 'theme-purple') {
+                    document.documentElement.style.setProperty('--primary-rgb', '92, 45, 145');
+                    document.documentElement.style.setProperty('--accent-rgb', '199, 154, 255');
+                } else if(theme === 'theme-orange') {
+                    document.documentElement.style.setProperty('--primary-rgb', '202, 80, 16');
+                    document.documentElement.style.setProperty('--accent-rgb', '255, 185, 0');
+                } else {
+                    document.documentElement.style.setProperty('--primary-rgb', '0, 120, 215');
+                    document.documentElement.style.setProperty('--accent-rgb', '155, 240, 11');
+                }
+                
+                themeDropdown.classList.remove('active');
+            });
+        });
+        
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            themeDropdown.classList.remove('active');
+        });
+        
+        document.getElementById('copyJavaBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText('mc.rongmian.world');
+            showNotification('Java版服务器地址已复制到剪贴板');
+        });
+        
+        document.getElementById('openNeteaseBtn').addEventListener('click', () => {
+            showNotification('请在网易我的世界APP中搜索服务器号');
+        });
+        
+        document.querySelector('.qq-btn').addEventListener('click', () => {
+            window.open('https://jq.qq.com/?_wv=1027&k=5KG6wzK', '_blank');
+        });
+        
+        document.querySelector('.bili-btn').addEventListener('click', () => {
+            window.open('https://b23.tv/bQi9mWt', '_blank');
+        });
+        
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.hero-title, .hero-subtitle, .hero-btn, .section-title, .fluent-card, .apple-card, .social-link').forEach(el => {
+            observer.observe(el);
+        });
+        
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = 'var(--primary)';
+            notification.style.color = 'white';
+            notification.style.padding = '15px 30px';
+            notification.style.borderRadius = '8px';
+            notification.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+            notification.style.zIndex = '1000';
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.3s';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        window.addEventListener('load', () => {
+            document.getElementById('mainTitle').classList.add('visible');
+            document.getElementById('mainSubtitle').classList.add('visible');
+            document.querySelector('.hero-btn').classList.add('visible');
+        });
+    </script>
+</body>
+</html>
